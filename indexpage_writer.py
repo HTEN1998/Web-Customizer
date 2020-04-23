@@ -11,8 +11,9 @@ class html_writer():
 		self.dropdown_font_color = 'text-light'
 		self.footer_font_color='text-warning'
 		
+		self.body_bgcolor = 'bg-primary'
 		self.navbar_bgcolor = 'bg-dark'
-		self.dropdown_bgcolor = 'bg-dark'
+		self.dropdown_bgcolor = 'bg-danger'
 		self.card_bgcolor='bg-dark'
 		self.footer_bgcolor='bg-dark'
 		self.button_color='bg-warning'
@@ -133,7 +134,7 @@ class html_writer():
 		    	<script src="../libs/popper.min.js"></script>
 		    	<script src="../libs/bootstrap.min.js"></script>
     		</head>
-			<body>"""+self.navbar_wrtier()+" "+self.carousel_writer()+" "+self.card_writer()+" "+self.footer_writer()+"""</body></html>"""
+			<body class=" """+self.body_bgcolor+""" ">"""+self.navbar_wrtier()+" "+self.carousel_writer()+" "+self.card_writer()+" "+self.footer_writer()+"""</body></html>"""
 		return start_html
 
 	def file_writer(self):
