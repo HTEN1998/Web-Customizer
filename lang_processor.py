@@ -17,7 +17,7 @@ class nlp():
 
         f = open('E:\DELL\Documents\WebCustomizer\corpus.json','r')
         data = json.load(f)
-
+        f.close()
         for keywords in self.tagged:
 
             if keywords in data['elements']:
@@ -49,7 +49,7 @@ class nlp():
         if count != 0:
             output.append([element_item,attribute_item,value_item])
         
-        print('stage 1 output= ',output)
+        # print('stage 1 output= ',output)
         return output
 
     def stage2(self,List_of_tuples):
@@ -60,7 +60,7 @@ class nlp():
                     List_of_tuples[current_index][1] = 'fontcolor'
                     break
 
-        print('--> Element processing done')
+        # print('--> Element processing done')
 
         for i in range(0,len(List_of_tuples)):
             if List_of_tuples[i][0] == '' and i-1>=0:
@@ -71,7 +71,7 @@ class nlp():
                 List_of_tuples.remove(List_of_tuples[i])
                 break
 
-        print('--> attribute processing done')
+        # print('--> attribute processing done')
 
         for i in range(0,len(List_of_tuples)):
             if List_of_tuples[i][2] in {'danger','warning','success','primary','info','dark','light','secondary'}:
@@ -90,45 +90,65 @@ class nlp():
         p = html_writer()
 
         for i in range(0,len(tupled_data)):
+            # print('--------------------------> ',tupled_data[i])
+            if (tupled_data[i][0] != "" and tupled_data[i][1] != "" and tupled_data[i][2] != ""):
+                
+                if tupled_data[i][0] == 'website' and tupled_data[i][1] == 'title':
+                    p.website_name = tupled_data[i][2]
+                    print('p.website_name= ',p.website_name)
+                elif tupled_data[i][0] == 'website' and tupled_data[i][1] == 'tagline':
+                    p.website_tagline = tupled_data[i][2]
+                    print('p.website_tagline= ',p.website_tagline)
+                elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'title':
+                    p.card_title = tupled_data[i][2]
+                    print('p.card_title= ',p.card_title)
+                elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'title':
+                    p.button_title = tupled_data[i][2]
+                    print('p.button_title= ',p.button_title)
+                
+                elif tupled_data[i][0] == 'navbar' and tupled_data[i][1] == 'fontcolor':
+                    p.navbar_font_color = 'navbar-'+tupled_data[i][2]
+                    print('p.navbar_font_color= ',p.navbar_font_color)
+                elif tupled_data[i][0] == 'dropdown' and tupled_data[i][1] == 'fontcolor':
+                    p.dropdown_font_color = 'text-'+tupled_data[i][2]
+                    print('p.dropdown_font_color= ',p.dropdown_font_color)
+                elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontcolor':
+                    p.footer_font_color = 'text-'+tupled_data[i][2]
+                    print('p.footer_font_color= ',p.footer_font_color)
+                elif tupled_data[i][0] == 'website' and tupled_data[i][1] == 'color':
+                    p.body_bgcolor = 'bg-'+tupled_data[i][2]
+                    print('p.body_bgcolor= ',p.body_bgcolor)
+                elif tupled_data[i][0] == 'navbar' and tupled_data[i][1] == 'color':
+                    p.navbar_bgcolor = 'bg-'+tupled_data[i][2]
+                    print('p.navbar_bgcolor= ',p.navbar_bgcolor)
+                elif tupled_data[i][0] == 'dropdown' and tupled_data[i][1] == 'color':
+                    p.dropdown_bgcolor = 'bg-'+tupled_data[i][2]
+                    print('p.dropdown_bgcolor= ',p.dropdown_bgcolor)
+                elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'color':
+                    p.footer_bgcolor = 'bg-'+tupled_data[i][2]
+                    print('p.footer_bgcolor= ',p.footer_bgcolor)
+                elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'color':
+                    p.button_color = 'bg-'+tupled_data[i][2]
+                    print('p.button_color= ',p.button_color)
 
-            if tupled_data[i][0] == 'website' and tupled_data[i][1] == 'title':
-                p.website_name = tupled_data[i][2]
-            elif tupled_data[i][0] == 'website' and tupled_data[i][1] == 'tagline':
-                p.website_tagline = tupled_data[i][2]
-            elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'title':
-                p.card_title = tupled_data[i][2]
-            elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'title':
-                p.button_title = tupled_data[i][2]
-            
-            elif tupled_data[i][0] == 'navbar' and tupled_data[i][1] == 'fontcolor':
-                p.navbar_font_color = 'navbar-'+tupled_data[i][2]
-            elif tupled_data[i][0] == 'dropdown' and tupled_data[i][1] == 'fontcolor':
-                p.dropdown_font_color = 'text-'+tupled_data[i][2]
-            elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontcolor':
-                p.footer_font_color = 'text-'+tupled_data[i][2]
-
-            elif tupled_data[i][0] == 'navbar' and tupled_data[i][1] == 'color':
-                p.navbar_bgcolor = 'bg-'+tupled_data[i][2]
-            elif tupled_data[i][0] == 'dropdown' and tupled_data[i][1] == 'color':
-                p.dropdown_bgcolor = 'bg-'+tupled_data[i][2]
-            elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'color':
-                p.footer_bgcolor = 'bg-'+tupled_data[i][2]
-            elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'color':
-                p.button_color = 'bg-'+tupled_data[i][2]
-
-            elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'fontsize':
-                p.card_font_size = tupled_data[i][2]
-            elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontsize':
-                p.footer_font_size = tupled_data[i][2]
-            elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'fontalign':
-                p.card_title_align = 'float-'+tupled_data[i][2]
-            elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'align':
-                p.button_align = 'float'+tupled_data[i][2]
-            elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontalign':
-                p.footer_font_align = 'text'+tupled_data[i][2]
+                elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'fontsize':
+                    p.card_font_size = tupled_data[i][2]
+                    print('p.card_font_size= ',p.card_font_size)
+                elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontsize':
+                    p.footer_font_size = tupled_data[i][2]
+                    print('p.footer_font_size= ',p.footer_font_size)
+                elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'fontalign':
+                    p.card_title_align = 'float-'+tupled_data[i][2]
+                    print('p.footer_font_size= ',p.footer_font_size)
+                elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'align':
+                    p.button_align = 'float-'+tupled_data[i][2]
+                    print('p.button_align= ',p.button_align)
+                elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontalign':
+                    p.footer_font_align = 'text-'+tupled_data[i][2]
+                    print('p.footer_font_align= ',p.footer_font_align)
+                # print('--------------------> Done')
         
         p.file_writer()
-
 
     def intial_processing(self,user_input):
         self.labels = re.findall("'([^']*)'",user_input)
@@ -137,34 +157,32 @@ class nlp():
         word_tokens = word_tokenize(user_input)
         filtered_sentence = [w for w in word_tokens if not w in stop_words] #stopwords removed
         
-        start_location = -1
-        label_found = 0
-        count = 0
+        label_found, count = 0,0
+        newli=[]
         for words in filtered_sentence:
-            if label_found == 1:
-                filtered_sentence.remove(words)
-
             if len(words)>1 and words[0] == "'":
                 label_found = 1
-                start_location = filtered_sentence.index(words)
-                filtered_sentence[start_location] = self.labels[count]
+                newli.append(self.labels[count])
                 count+=1
-            if len(words) == 1 and words == "'":
-                    filtered_sentence.remove(words)
-                    label_found = 0
-        
-        print('tokens= ',filtered_sentence)
+            elif len(words) == 1 and words == "'":
+                label_found = 0
+            elif  label_found == 0:
+                newli.append(words)
+        filtered_sentence = newli
+        print('filtered= ',filtered_sentence)
         return filtered_sentence
-
-
+    
+    
+print('modules loaded')
 n = nlp()
-user_input1 = 'make the navbar color blue, and the whole page font 25px,the background of the page should be green.'
-user_input2 =  'change color of the navigation bar to red and make the navigation font a bit bigger, and color them bold black.'
-user_input3 = "I want website name to be change to 'Amazon' and with tagline as 'shop in your style' ."
-user_input = input()
-n.tagged = n.intial_processing(user_input)
+f = open('all inputs.txt','r') 
+input_para = f.read().lower()
+sentences = input_para.split('.')
 
-output = n.stage1()
-output = n.stage2(output)
-n.stage3(output)
+for i in range(len(sentences)):
+    sentences[i] = sentences[i].strip()
+    n.tagged = n.intial_processing(sentences[i])
 
+    output = n.stage1()
+    output = n.stage2(output)
+    n.stage3(output)
