@@ -7,13 +7,14 @@ from indexpage_writer import html_writer
 class nlp():
     labels = []
     tagged = []
+    def __init__(self):
+        self.p = html_writer()
 
     def stage1(self):
 
         output = []
         element_item = attribute_item = value_item =''
-        element_found_flag = 0
-        count = 0
+        element_found_flag,count = 0,0
 
         f = open('E:\DELL\Documents\WebCustomizer\corpus.json','r')
         data = json.load(f)
@@ -47,9 +48,7 @@ class nlp():
                 count = 0
             
         if count != 0:
-            output.append([element_item,attribute_item,value_item])
-        
-        # print('stage 1 output= ',output)
+            output.append([element_item,attribute_item,value_item])        
         return output
 
     def stage2(self,List_of_tuples):
@@ -59,8 +58,7 @@ class nlp():
                 if List_of_tuples[i][0] == List_of_tuples[current_index][0] and List_of_tuples[i][1] == List_of_tuples[current_index][1] and current_index!=0:
                     List_of_tuples[current_index][1] = 'fontcolor'
                     break
-
-        # print('--> Element processing done')
+        #Element processing done
 
         for i in range(0,len(List_of_tuples)):
             if List_of_tuples[i][0] == '' and i-1>=0:
@@ -70,8 +68,7 @@ class nlp():
             if List_of_tuples[i][0] == '':
                 List_of_tuples.remove(List_of_tuples[i])
                 break
-
-        # print('--> attribute processing done')
+        #attribute processing done
 
         for i in range(0,len(List_of_tuples)):
             if List_of_tuples[i][2] in {'danger','warning','success','primary','info','dark','light','secondary'}:
@@ -83,72 +80,69 @@ class nlp():
             elif List_of_tuples[i][2] in {'left','center','right'}:
                 List_of_tuples[i][1] = 'fontalign'
         
-        print('stage 2 output= ',List_of_tuples)
+        # print('stage 2 output= ',List_of_tuples)
         return List_of_tuples
 
     def stage3(self,tupled_data):
-        p = html_writer()
 
         for i in range(0,len(tupled_data)):
-            # print('--------------------------> ',tupled_data[i])
             if (tupled_data[i][0] != "" and tupled_data[i][1] != "" and tupled_data[i][2] != ""):
                 
                 if tupled_data[i][0] == 'website' and tupled_data[i][1] == 'title':
-                    p.website_name = tupled_data[i][2]
-                    print('p.website_name= ',p.website_name)
+                    self.p.website_name = tupled_data[i][2]
+                    print('self.p.website_name= ',self.p.website_name)
                 elif tupled_data[i][0] == 'website' and tupled_data[i][1] == 'tagline':
-                    p.website_tagline = tupled_data[i][2]
-                    print('p.website_tagline= ',p.website_tagline)
+                    self.p.website_tagline = tupled_data[i][2]
+                    print('self.p.website_tagline= ',self.p.website_tagline)
                 elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'title':
-                    p.card_title = tupled_data[i][2]
-                    print('p.card_title= ',p.card_title)
+                    self.p.card_title = tupled_data[i][2]
+                    print('self.p.card_title= ',self.p.card_title)
                 elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'title':
-                    p.button_title = tupled_data[i][2]
-                    print('p.button_title= ',p.button_title)
+                    self.p.button_title = tupled_data[i][2]
+                    print('self.p.button_title= ',self.p.button_title)
                 
                 elif tupled_data[i][0] == 'navbar' and tupled_data[i][1] == 'fontcolor':
-                    p.navbar_font_color = 'navbar-'+tupled_data[i][2]
-                    print('p.navbar_font_color= ',p.navbar_font_color)
+                    self.p.navbar_font_color = 'navbar-'+tupled_data[i][2]
+                    print('self.p.navbar_font_color= ',self.p.navbar_font_color)
                 elif tupled_data[i][0] == 'dropdown' and tupled_data[i][1] == 'fontcolor':
-                    p.dropdown_font_color = 'text-'+tupled_data[i][2]
-                    print('p.dropdown_font_color= ',p.dropdown_font_color)
+                    self.p.dropdown_font_color = 'text-'+tupled_data[i][2]
+                    print('self.p.dropdown_font_color= ',self.p.dropdown_font_color)
                 elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontcolor':
-                    p.footer_font_color = 'text-'+tupled_data[i][2]
-                    print('p.footer_font_color= ',p.footer_font_color)
+                    self.p.footer_font_color = 'text-'+tupled_data[i][2]
+                    print('self.p.footer_font_color= ',self.p.footer_font_color)
                 elif tupled_data[i][0] == 'website' and tupled_data[i][1] == 'color':
-                    p.body_bgcolor = 'bg-'+tupled_data[i][2]
-                    print('p.body_bgcolor= ',p.body_bgcolor)
+                    self.p.body_bgcolor = 'bg-'+tupled_data[i][2]
+                    print('self.p.body_bgcolor= ',self.p.body_bgcolor)
                 elif tupled_data[i][0] == 'navbar' and tupled_data[i][1] == 'color':
-                    p.navbar_bgcolor = 'bg-'+tupled_data[i][2]
-                    print('p.navbar_bgcolor= ',p.navbar_bgcolor)
+                    self.p.navbar_bgcolor = 'bg-'+tupled_data[i][2]
+                    print('self.p.navbar_bgcolor= ',self.p.navbar_bgcolor)
                 elif tupled_data[i][0] == 'dropdown' and tupled_data[i][1] == 'color':
-                    p.dropdown_bgcolor = 'bg-'+tupled_data[i][2]
-                    print('p.dropdown_bgcolor= ',p.dropdown_bgcolor)
+                    self.p.dropdown_bgcolor = 'bg-'+tupled_data[i][2]
+                    print('self.p.dropdown_bgcolor= ',self.p.dropdown_bgcolor)
                 elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'color':
-                    p.footer_bgcolor = 'bg-'+tupled_data[i][2]
-                    print('p.footer_bgcolor= ',p.footer_bgcolor)
+                    self.p.footer_bgcolor = 'bg-'+tupled_data[i][2]
+                    print('self.p.footer_bgcolor= ',self.p.footer_bgcolor)
                 elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'color':
-                    p.button_color = 'bg-'+tupled_data[i][2]
-                    print('p.button_color= ',p.button_color)
+                    self.p.button_color = 'bg-'+tupled_data[i][2]
+                    print('self.p.button_color= ',self.p.button_color)
 
                 elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'fontsize':
-                    p.card_font_size = tupled_data[i][2]
-                    print('p.card_font_size= ',p.card_font_size)
+                    self.p.card_font_size = tupled_data[i][2]
+                    print('self.p.card_font_size= ',self.p.card_font_size)
                 elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontsize':
-                    p.footer_font_size = tupled_data[i][2]
-                    print('p.footer_font_size= ',p.footer_font_size)
+                    self.p.footer_font_size = tupled_data[i][2]
+                    print('self.p.footer_font_size= ',self.p.footer_font_size)
                 elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'fontalign':
-                    p.card_title_align = 'float-'+tupled_data[i][2]
-                    print('p.footer_font_size= ',p.footer_font_size)
+                    self.p.card_title_align = 'float-'+tupled_data[i][2]
+                    print('self.p.footer_font_size= ',self.p.footer_font_size)
                 elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'align':
-                    p.button_align = 'float-'+tupled_data[i][2]
-                    print('p.button_align= ',p.button_align)
+                    self.p.button_align = 'float-'+tupled_data[i][2]
+                    print('self.p.button_align= ',self.p.button_align)
                 elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontalign':
-                    p.footer_font_align = 'text-'+tupled_data[i][2]
-                    print('p.footer_font_align= ',p.footer_font_align)
-                # print('--------------------> Done')
+                    self.p.footer_font_align = 'text-'+tupled_data[i][2]
+                    print('self.p.footer_font_align= ',self.p.footer_font_align)
         
-        p.file_writer()
+        self.p.file_writer()
 
     def intial_processing(self,user_input):
         self.labels = re.findall("'([^']*)'",user_input)
