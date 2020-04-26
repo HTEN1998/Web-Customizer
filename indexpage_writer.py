@@ -11,7 +11,7 @@ class html_writer():
 		self.dropdown_font_color = 'text-light'
 		self.footer_font_color='text-warning'
 		
-		self.body_bgcolor = 'bg-primary'
+		self.body_bgcolor = 'bg-light'
 		self.navbar_bgcolor = 'bg-dark'
 		self.dropdown_bgcolor = 'bg-danger'
 		self.card_bgcolor='bg-dark'
