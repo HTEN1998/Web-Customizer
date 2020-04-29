@@ -3,6 +3,7 @@ import json
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from indexpage_writer import html_writer
+import os
 
 class nlp():
     labels = []
@@ -16,7 +17,7 @@ class nlp():
         element_item = attribute_item = value_item =''
         element_found_flag,count = 0,0
 
-        f = open('E:\DELL\Documents\WebCustomizer\corpus.json','r')
+        f = open(os.path.abspath('corpus.json'),'r')
         data = json.load(f)
         f.close()
         for keywords in self.tagged:

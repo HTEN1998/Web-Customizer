@@ -1,3 +1,5 @@
+import os
+
 
 class html_writer():
 
@@ -139,7 +141,7 @@ class html_writer():
 
 	def file_writer(self):
 
-		f = open("E:/DELL/Documents/WebCustomizer\html_pages/index.html","w")
+		f = open(os.path.abspath("html_pages/index.html"),"w")
 		head_tag = self.header_writer()
 		f.write(head_tag)
 		f.close()
