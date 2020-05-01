@@ -9,7 +9,7 @@ from lang_processor import nlp
 
 
 class WCUI:
-    # window = ""
+    window = ""
 
     Sc_height = 0
     Sc_width = 0
@@ -30,10 +30,10 @@ class WCUI:
 
 
     def makeChanges(self, changes):
-        print(changes)
         if( len(changes) >= 3  and  not(changes == None) and  not(changes == "")):
-           self.nlpObject.proccessInput(changes)
-           pass
+            print(changes)
+            self.nlpObject.proccessInput(changes)
+           
 
     def clearEntry(self, inputText):
         self.inputText.delete(0.0, 23.0)
@@ -47,7 +47,7 @@ class WCUI:
         self.inputText.bind("<Button-1>", self.clearEntry)
         self.inputText.place(relx=0, rely=0)
 
-        button = Button(self.window, text="Apply Changes", width = 500 ,bg="blue", fg="white",command = lambda: self.makeChanges(inputText.get("1.0","end-1c")))
+        button = Button(self.window, text="Apply Changes", width = 500 ,bg="blue", fg="white",command = lambda: self.makeChanges(self.inputText.get("1.0","end-1c")))
         button['font'] = myFont
         button.pack(side = BOTTOM)
         self.window.mainloop()
