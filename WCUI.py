@@ -28,7 +28,6 @@ class WCUI:
         print(self.Sc_height)
         self.nlpObject = nlp()
 
-
     def makeChanges(self, changes):
         if( len(changes) >= 3  and  not(changes == None) and  not(changes == "")):
             print(changes)
@@ -52,6 +51,5 @@ class WCUI:
         button.pack(side = BOTTOM)
         self.window.mainloop()
 
-    
 if __name__ == "__main__":
     WCUI().mainmenu()
