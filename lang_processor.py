@@ -3,11 +3,11 @@ import json
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from indexpage_writer import html_writer
-import os
 
 class nlp():
     labels = []
     tagged = []
+    paragraph = ""
     def __init__(self):
         self.p = html_writer()
 
@@ -17,11 +17,10 @@ class nlp():
         element_item = attribute_item = value_item =''
         element_found_flag,count = 0,0
 
-        f = open(os.path.abspath('corpus.json'),'r')
+        f = open('E:\DELL\Documents\WebCustomizer\corpus.json','r')
         data = json.load(f)
         f.close()
         for keywords in self.tagged:
-
             if keywords in data['elements']:
                 if element_found_flag == 0:
                     element_item = data['elements'][keywords]
@@ -49,7 +48,8 @@ class nlp():
                 count = 0
             
         if count != 0:
-            output.append([element_item,attribute_item,value_item])        
+            output.append([element_item,attribute_item,value_item]) 
+        print('Stage 1 output= ',output)       
         return output
 
     def stage2(self,List_of_tuples):
@@ -81,7 +81,7 @@ class nlp():
             elif List_of_tuples[i][2] in {'left','center','right'}:
                 List_of_tuples[i][1] = 'fontalign'
         
-        # print('stage 2 output= ',List_of_tuples)
+        print('stage 2 output= ',List_of_tuples)
         return List_of_tuples
 
     def stage3(self,tupled_data):
@@ -167,17 +167,31 @@ class nlp():
         print('filtered= ',filtered_sentence)
         return filtered_sentence
     
+    def proccessInput(self,changes):
+        input_para = changes.lower()
+        sentences = input_para.split('.')
+        print('sentence= ',sentences)
+
+        for i in range(len(sentences)):
+            sentences[i] = sentences[i].strip()
+            self.tagged = self.intial_processing(sentences[i])
+            # print('Staging started')
+            output = self.stage1()
+            output = self.stage2(output)
+            self.stage3(output)
+
     
 print('modules loaded')
 n = nlp()
-f = open('all inputs.txt','r') 
-input_para = f.read().lower()
-sentences = input_para.split('.')
+# f = open('all inputs.txt','r') 
+# # input_para = f.read().lower()
+# input_para = n.paragraph.lower()
+# sentences = input_para.split('.')
 
-for i in range(len(sentences)):
-    sentences[i] = sentences[i].strip()
-    n.tagged = n.intial_processing(sentences[i])
+# for i in range(len(sentences)):
+#     sentences[i] = sentences[i].strip()
+#     n.tagged = n.intial_processing(sentences[i])
 
-    output = n.stage1()
-    output = n.stage2(output)
-    n.stage3(output)
+#     output = n.stage1()
+#     output = n.stage2(output)
+#     n.stage3(output)
