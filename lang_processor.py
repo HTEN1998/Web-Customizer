@@ -59,7 +59,6 @@ class Nlp():
         def check_history(current_index):
             for i in range(0,current_index): #changes made from current -index to current index+1
                 if (self.List_of_sets[i][0] == self.List_of_sets[current_index][0] and self.List_of_sets[i][1] == self.List_of_sets[current_index][1]) and current_index!=0:
-                    print('------------------------------->helll')
                     self.List_of_sets[current_index][1] = 'fontcolor'
                     break
 
