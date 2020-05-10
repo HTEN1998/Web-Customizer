@@ -5,150 +5,150 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from indexpage_writer import html_writer
 
-class nlp():
+class Nlp():
     labels = []
     tagged = []
+    List_of_sets = []
     def __init__(self):
         self.p = html_writer()
 
     def stage1(self):
-
-        output = []
-        element_item = attribute_item = value_item =''
-        element_found_flag,count = 0,0
-
-        f = open(os.path.abspath('corpus.json'),'r')
-        data = json.load(f)
+        # generates list of sets of 3 keywords containing element, attribute & value
+        element_item = attribute_item = value_item =""
+        is_element_found,count = 0,False
+        # count indicate no.of items in each set of keywords
+        # set of 3 keywords is appended into self.List_of_sets[]
+        f = open(os.path.abspath('corpus.json'),'r') 
+        corpus = json.load(f)
         f.close()
-        for keywords in self.tagged:
-            if keywords in data['elements']:
-                if element_found_flag == 0:
-                    element_item = data['elements'][keywords]
-                    element_found_flag = 1
+        # generating set of keywords by checking it with corpus data
+        for word in self.tagged:
+            if word in corpus['elements']:
+                if is_element_found == False:
+                    element_item = corpus['elements'][word]
+                    is_element_found = True
                     count+=1
                 else:
-                    output.append([element_item,attribute_item,value_item])
-                    element_item = attribute_item = value_item =''
-                    element_found_flag = 0
+                    self.List_of_sets.append([element_item,attribute_item,value_item])
+                    element_item = attribute_item = value_item =""
+                    is_element_found = False
                     count = 0
-            elif keywords in data['attributes']:
-                attribute_item = data['attributes'][keywords]
+            elif word in corpus['attributes']:
+                attribute_item = corpus['attributes'][word]
                 count+=1
-            elif keywords in data['value']:
-                value_item = data['value'][keywords]
+            elif word in corpus['value']:
+                value_item = corpus['value'][word]
                 count+=1
-            elif keywords in self.labels:
+            elif word in self.labels:
                 value_item = self.labels.pop(0)
                 count+=1
 
             if count == 3:
-                output.append([element_item,attribute_item,value_item])
-                element_item = attribute_item = value_item =''
-                element_found_flag = 0
+                self.List_of_sets.append([element_item,attribute_item,value_item])
+                element_item = attribute_item = value_item =""
+                is_element_found = False
                 count = 0
             
         if count != 0:
-            output.append([element_item,attribute_item,value_item]) 
-        print('Stage 1 output= ',output)       
-        return output
+            self.List_of_sets.append([element_item,attribute_item,value_item]) 
+        print('Stage 1 output= ',self.List_of_sets)       
+        # return self.List_of_sets
 
-    def stage2(self,List_of_tuples):
-
+    def stage2(self):
+        # does analysis and rearrangement of keywords in each sets
         def check_history(current_index):
-            for i in range(0,current_index+1):
-                if List_of_tuples[i][0] == List_of_tuples[current_index][0] and List_of_tuples[i][1] == List_of_tuples[current_index][1] and current_index!=0:
-                    List_of_tuples[current_index][1] = 'fontcolor'
+            for i in range(0,current_index): #changes made from current -index to current index+1
+                if (self.List_of_sets[i][0] == self.List_of_sets[current_index][0] and self.List_of_sets[i][1] == self.List_of_sets[current_index][1]) and current_index!=0:
+                    print('------------------------------->helll')
+                    self.List_of_sets[current_index][1] = 'fontcolor'
                     break
+
+        for keyword_set in range(0,len(self.List_of_sets)):
+            if self.List_of_sets[keyword_set][0] == '' and keyword_set-1>=0:
+                self.List_of_sets[keyword_set][0] = self.List_of_sets[keyword_set-1][0]
+        
+        for keyword_set in range(0,len(self.List_of_sets)):
+            if self.List_of_sets[keyword_set][0] == '':
+                self.List_of_sets.remove(self.List_of_sets[keyword_set])
+                break
         #Element processing done
 
-        for i in range(0,len(List_of_tuples)):
-            if List_of_tuples[i][0] == '' and i-1>=0:
-                List_of_tuples[i][0] = List_of_tuples[i-1][0]
-        
-        for i in range(0,len(List_of_tuples)):
-            if List_of_tuples[i][0] == '':
-                List_of_tuples.remove(List_of_tuples[i])
-                break
+        for keyword_set in range(0,len(self.List_of_sets)):
+            if self.List_of_sets[keyword_set][2] in {'danger','warning','success','primary','info','dark','light','secondary'}:
+                self.List_of_sets[keyword_set][1] = 'color'
+                check_history(keyword_set)
+            elif self.List_of_sets[keyword_set][2] in {'h1','h6'}:
+                self.List_of_sets[keyword_set][1] = 'fontsize'
+            elif self.List_of_sets[keyword_set][2] in {'left','center','right'}:
+                self.List_of_sets[keyword_set][1] = 'fontalign'
         #attribute processing done
-
-        for i in range(0,len(List_of_tuples)):
-            if List_of_tuples[i][2] in {'danger','warning','success','primary','info','dark','light','secondary'}:
-                List_of_tuples[i][1] = 'color'
-                check_history(i)
-
-            elif List_of_tuples[i][2] in {'h1','h6'}:
-                List_of_tuples[i][1] = 'fontsize'
-            elif List_of_tuples[i][2] in {'left','center','right'}:
-                List_of_tuples[i][1] = 'fontalign'
         
-        print('stage 2 output= ',List_of_tuples)
-        return List_of_tuples
+        print('stage 2 output= ',self.List_of_sets)
+        # return self.List_of_sets
 
-    def stage3(self,tupled_data):
-
-        for i in range(0,len(tupled_data)):
-            if (tupled_data[i][0] != "" and tupled_data[i][1] != "" and tupled_data[i][2] != ""):
+    def stage3(self):
+        # apply change to html pages accoriding to the output of keywords analysis
+        for i in range(0,len(self.List_of_sets)):
+            if (self.List_of_sets[i][0] != "" and self.List_of_sets[i][1] != "" and self.List_of_sets[i][2] != ""):
                 print('stage 3')
-                if tupled_data[i][0] == 'website' and tupled_data[i][1] == 'title':
-                    self.p.website_name = tupled_data[i][2]
+                if self.List_of_sets[i][0] == 'website' and self.List_of_sets[i][1] == 'title':
+                    self.p.website_name = self.List_of_sets[i][2]
                     print('self.p.website_name= ',self.p.website_name)
-                elif tupled_data[i][0] == 'website' and tupled_data[i][1] == 'tagline':
-                    self.p.website_tagline = tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'website' and self.List_of_sets[i][1] == 'tagline':
+                    self.p.website_tagline = self.List_of_sets[i][2]
                     print('self.p.website_tagline= ',self.p.website_tagline)
-                elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'title':
-                    self.p.card_title = tupled_data[i][2]
-                    print('self.p.card_title= ',self.p.card_title)
-                elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'title':
-                    self.p.button_title = tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'button' and self.List_of_sets[i][1] == 'title':
+                    self.p.button_title = self.List_of_sets[i][2]
                     print('self.p.button_title= ',self.p.button_title)
                 
-                elif tupled_data[i][0] == 'navbar' and tupled_data[i][1] == 'fontcolor':
-                    self.p.navbar_font_color = 'navbar-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'navbar' and self.List_of_sets[i][1] == 'fontcolor':
+                    self.p.navbar_font_color = 'navbar-'+self.List_of_sets[i][2]
                     print('self.p.navbar_font_color= ',self.p.navbar_font_color)
-                elif tupled_data[i][0] == 'dropdown' and tupled_data[i][1] == 'fontcolor':
-                    self.p.dropdown_font_color = 'text-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'dropdown' and self.List_of_sets[i][1] == 'fontcolor':
+                    self.p.dropdown_font_color = 'text-'+self.List_of_sets[i][2]
                     print('self.p.dropdown_font_color= ',self.p.dropdown_font_color)
-                elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontcolor':
-                    self.p.footer_font_color = 'text-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'footer' and self.List_of_sets[i][1] == 'fontcolor':
+                    self.p.footer_font_color = 'text-'+self.List_of_sets[i][2]
                     print('self.p.footer_font_color= ',self.p.footer_font_color)
-                elif tupled_data[i][0] == 'website' and tupled_data[i][1] == 'color':
-                    self.p.body_bgcolor = 'bg-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'website' and self.List_of_sets[i][1] == 'color':
+                    self.p.body_bgcolor = 'bg-'+self.List_of_sets[i][2]
                     print('self.p.body_bgcolor= ',self.p.body_bgcolor)
-                elif tupled_data[i][0] == 'navbar' and tupled_data[i][1] == 'color':
-                    self.p.navbar_bgcolor = 'bg-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'navbar' and self.List_of_sets[i][1] == 'color':
+                    self.p.navbar_bgcolor = 'bg-'+self.List_of_sets[i][2]
                     print('self.p.navbar_bgcolor= ',self.p.navbar_bgcolor)
-                elif tupled_data[i][0] == 'dropdown' and tupled_data[i][1] == 'color':
-                    self.p.dropdown_bgcolor = 'bg-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'dropdown' and self.List_of_sets[i][1] == 'color':
+                    self.p.dropdown_bgcolor = 'bg-'+self.List_of_sets[i][2]
                     print('self.p.dropdown_bgcolor= ',self.p.dropdown_bgcolor)
                 
-                elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'color':
-                    self.p.card_bgcolor = 'bg-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'card' and self.List_of_sets[i][1] == 'color':
+                    self.p.card_bgcolor = 'bg-'+self.List_of_sets[i][2]
                     print('self.p.card_bgcolor= ',self.p.card_bgcolor)
 
-                elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'color':
-                    self.p.footer_bgcolor = 'bg-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'footer' and self.List_of_sets[i][1] == 'color':
+                    self.p.footer_bgcolor = 'bg-'+self.List_of_sets[i][2]
                     print('self.p.footer_bgcolor= ',self.p.footer_bgcolor)
-                elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'color':
-                    self.p.button_color = 'bg-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'button' and self.List_of_sets[i][1] == 'color':
+                    self.p.button_color = 'bg-'+self.List_of_sets[i][2]
                     print('self.p.button_color= ',self.p.button_color)
 
-                elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'fontsize':
-                    self.p.card_font_size = tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'card' and self.List_of_sets[i][1] == 'fontsize':
+                    self.p.card_font_size = self.List_of_sets[i][2]
                     print('self.p.card_font_size= ',self.p.card_font_size)
-                elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontsize':
-                    self.p.footer_font_size = tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'footer' and self.List_of_sets[i][1] == 'fontsize':
+                    self.p.footer_font_size = self.List_of_sets[i][2]
                     print('self.p.footer_font_size= ',self.p.footer_font_size)
-                elif tupled_data[i][0] == 'card' and tupled_data[i][1] == 'fontalign':
-                    self.p.card_title_align = 'float-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'card' and self.List_of_sets[i][1] == 'fontalign':
+                    self.p.card_title_align = 'float-'+self.List_of_sets[i][2]
                     print('self.p.footer_font_size= ',self.p.footer_font_size)
-                elif tupled_data[i][0] == 'button' and tupled_data[i][1] == 'align':
-                    self.p.button_align = 'float-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'button' and self.List_of_sets[i][1] == 'align' or self.List_of_sets[i][1] == 'fontalign':
+                    self.p.button_align = 'float-'+self.List_of_sets[i][2]
                     print('self.p.button_align= ',self.p.button_align)
-                elif tupled_data[i][0] == 'footer' and tupled_data[i][1] == 'fontalign':
-                    self.p.footer_font_align = 'text-'+tupled_data[i][2]
+                elif self.List_of_sets[i][0] == 'footer' and self.List_of_sets[i][1] == 'fontalign':
+                    self.p.footer_font_align = 'text-'+self.List_of_sets[i][2]
                     print('self.p.footer_font_align= ',self.p.footer_font_align)
         
         self.p.file_writer()
+        self.List_of_sets.clear()
 
     def intial_processing(self,user_input):
         self.labels = re.findall("'([^']*)'",user_input)
@@ -180,15 +180,14 @@ class nlp():
         for i in range(len(sentences)):
             sentences[i] = sentences[i].strip()
             self.tagged = self.intial_processing(sentences[i])
-            output = self.stage1()
-            output = self.stage2(output)
-            self.stage3(output)
+            self.stage1()
+            self.stage2()
+            self.stage3()
 
     
 print('modules loaded')
-n = nlp()
-# f = open('all inputs.txt','r') 
-# # input_para = f.read().lower()
+n = Nlp()
+# input_para = input("Enter input sentence: ")
 # input_para = n.paragraph.lower()
 # sentences = input_para.split('.')
 
@@ -196,6 +195,6 @@ n = nlp()
 #     sentences[i] = sentences[i].strip()
 #     n.tagged = n.intial_processing(sentences[i])
 
-#     output = n.stage1()
-#     output = n.stage2(output)
-#     n.stage3(output)
+#     n.stage1()
+#     n.stage2()
+#     n.stage3()

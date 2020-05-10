@@ -5,7 +5,6 @@ class html_writer():
 	def __init__(self):
 		self.website_name = 'My Shoping center'
 		self.website_tagline = 'This is my tagline'
-		self.card_title='item name'
 		self.button_title='Buy now'
 
 		self.navbar_font_color = 'navbar-dark'
@@ -81,7 +80,7 @@ class html_writer():
 				<section class="card text-warning """+self.card_bgcolor+""" rounded ml-2 mr-2 p-4">
 					<img src="images/iphone.png" class="card-img-top" height="530px">
 					<section class="card-body" style="display: inline-block;">
-						<section class=" """+self.card_font_size+""" font-weight-bold """+self.card_title_align+"""">"""+self.card_title+"""</section>
+						<section class=" """+self.card_font_size+""" font-weight-bold """+self.card_title_align+"""">IPhone 5S</section>
 						<button class="btn rounder """+self.button_color+""" text-dark h3 """+self.button_align+""" ">"""+self.button_title+"""</button>
 					</section>
 				</section>
@@ -91,7 +90,7 @@ class html_writer():
 				<section class="card text-warning """+self.card_bgcolor+""" rounded ml-2 mr-2 p-4">
 					<img src="images/cloth.png" class="card-img-top" height="530px">
 					<section class="card-body" style="display: inline-block;">
-						<section class=" """+self.card_font_size+""" font-weight-bold """+self.card_title_align+"""">"""+self.card_title+"""</section>
+						<section class=" """+self.card_font_size+""" font-weight-bold """+self.card_title_align+"""">Formal mens suit</section>
 						<button class="btn rounder """+self.button_color+""" text-dark h3 """+self.button_align+""" ">"""+self.button_title+"""</button>
 					</section>
 				</section>
@@ -101,7 +100,7 @@ class html_writer():
 				<section class="card text-warning """+self.card_bgcolor+""" rounded ml-2 mr-2 p-4">
 					<img src="images/headphones.png" class="card-img-top" height="530px">
 					<section class="card-body" style="display: inline-block;">
-						<section class=" """+self.card_font_size+""" font-weight-bold """+self.card_title_align+"""">"""+self.card_title+"""</section>
+						<section class=" """+self.card_font_size+""" font-weight-bold """+self.card_title_align+"""">Wireless Headphone</section>
 						<button class="btn rounder """+self.button_color+""" text-dark h3 """+self.button_align+""" ">"""+self.button_title+"""</button>
 					</section>
 				</section>
